@@ -24,7 +24,7 @@ public class ReqresInTests {
     }
 
     @Test
-    void checkSingleResourceName() {
+    void checkSingleResource() {
 
         given()
                 .log().uri()
@@ -34,7 +34,13 @@ public class ReqresInTests {
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("data.name", is("fuchsia rose"));
+                .body("data.id", is(2),
+                        "data.name", is("fuchsia rose"),
+                        "data.year", is(2001),
+                        "data.color", is("#C74375"),
+                        "data.pantone_value", is("17-2031"))
+                .body("support.url", is("https://reqres.in/#support-heading"),
+                        "support.text", is("To keep ReqRes free, contributions towards server costs are appreciated!"));
     }
 
     @Test
@@ -55,7 +61,7 @@ public class ReqresInTests {
     }
 
     @Test
-    void checkCreateJob() {
+    void checkCreate() {
 
         String data = "{\"name\": \"morpheus\", \"job\": \"leader\"}";
 
@@ -69,7 +75,8 @@ public class ReqresInTests {
                 .log().status()
                 .log().body()
                 .statusCode(201)
-                .body("job", is("leader"));
+                .body("name", is("morpheus"),
+                        "job", is("leader"));
     }
 
     @Test

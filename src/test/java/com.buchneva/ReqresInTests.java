@@ -1,5 +1,7 @@
 package com.buchneva;
 
+import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
@@ -9,6 +11,11 @@ import static org.hamcrest.Matchers.is;
 
 public class ReqresInTests {
 
+    @BeforeAll
+    static void setUp() {
+        RestAssured.baseURI = "https://reqres.in/api";
+    }
+
 
     @Test
     void checkSingleResourceNotFound() {
@@ -16,7 +23,7 @@ public class ReqresInTests {
         given()
                 .log().uri()
                 .when()
-                .get("https://reqres.in/api/unknown/23")
+                .get("/unknown/23")
                 .then()
                 .log().status()
                 .log().body()
@@ -29,7 +36,7 @@ public class ReqresInTests {
         given()
                 .log().uri()
                 .when()
-                .get("https://reqres.in/api/unknown/2")
+                .get("/unknown/2")
                 .then()
                 .log().status()
                 .log().body()
@@ -53,7 +60,7 @@ public class ReqresInTests {
                 .contentType(JSON)
                 .body(data)
                 .when()
-                .get("https://reqres.in/api/users")
+                .get("/users")
                 .then()
                 .log().status()
                 .log().body()
@@ -70,7 +77,7 @@ public class ReqresInTests {
                 .contentType(JSON)
                 .body(data)
                 .when()
-                .post("https://reqres.in/api/users")
+                .post("/users")
                 .then()
                 .log().status()
                 .log().body()
@@ -89,7 +96,7 @@ public class ReqresInTests {
                 .contentType(JSON)
                 .body(data)
                 .when()
-                .post("https://reqres.in/api/login")
+                .post("/login")
                 .then()
                 .log().status()
                 .log().body()

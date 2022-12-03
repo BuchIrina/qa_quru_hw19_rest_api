@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import static com.buchneva.specs.RequestSpecs.requestSpec;
 import static com.buchneva.specs.ResponseSpecs.responseSpec;
 import static io.restassured.RestAssured.given;
+import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -42,6 +43,18 @@ public class ReqresInTests {
                 .body("support.url", is("https://reqres.in/#support-heading"),
                         "support.text", is("To keep ReqRes free, contributions towards server costs are appreciated!"));
 
+    }
+
+    @Test
+    void checkCreateWithStatus() {
+
+        given()
+                .spec(requestSpec)
+                .when()
+                .get("/users")
+                .then()
+                .spec(responseSpec)
+                .statusCode(200);
     }
 
     @Test

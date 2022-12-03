@@ -1,6 +1,6 @@
 package com.buchneva.models.pojo;
 
-public class LoginResponseLombokModel {
+public class LoginResponseModel {
     private String token;
 
     public String getToken() {

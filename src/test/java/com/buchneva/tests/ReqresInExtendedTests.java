@@ -1,7 +1,9 @@
 package com.buchneva.tests;
 
-import com.buchneva.models.pojo.LoginBodyLombokModel;
-import com.buchneva.models.pojo.LoginResponseLombokModel;
+import com.buchneva.models.lombok.LoginBodyLombokModel;
+import com.buchneva.models.lombok.LoginResponseLombokModel;
+import com.buchneva.models.pojo.LoginBodyModel;
+import com.buchneva.models.pojo.LoginResponseModel;
 import io.qameta.allure.restassured.AllureRestAssured;
 import org.junit.jupiter.api.Test;
 
@@ -36,21 +38,21 @@ public class ReqresInExtendedTests {
 
     @Test
     void loginWithPojoModelTest() {
-        LoginBodyLombokModel body = new LoginBodyLombokModel();
+        LoginBodyModel body = new LoginBodyModel();
         body.setEmail("eve.holt@reqres.in");
         body.setPassword("cityslicka");
 
-        LoginResponseLombokModel response = given()
+        LoginResponseModel response = given()
                 .log().uri()
                 .contentType(JSON)
-                .body(body )
+                .body(body)
                 .when()
                 .post("https://reqres.in/api/login")
                 .then()
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .extract().as(LoginResponseLombokModel.class);
+                .extract().as(LoginResponseModel.class);
         // { "token": "QpwL5tke4Pnpja7X4" }
 
         assertThat(response.getToken()).isEqualTo("QpwL5tke4Pnpja7X4");
@@ -65,7 +67,7 @@ public class ReqresInExtendedTests {
         LoginResponseLombokModel response = given()
                 .log().uri()
                 .contentType(JSON)
-                .body(body )
+                .body(body)
                 .when()
                 .post("https://reqres.in/api/login")
                 .then()
@@ -88,7 +90,7 @@ public class ReqresInExtendedTests {
                 .filter(new AllureRestAssured())
                 .log().uri()
                 .contentType(JSON)
-                .body(body )
+                .body(body)
                 .when()
                 .post("https://reqres.in/api/login")
                 .then()
@@ -111,7 +113,7 @@ public class ReqresInExtendedTests {
                 .filter(withCustomTemplates())
                 .log().uri()
                 .contentType(JSON)
-                .body(body )
+                .body(body)
                 .when()
                 .post("https://reqres.in/api/login")
                 .then()
@@ -132,7 +134,7 @@ public class ReqresInExtendedTests {
 
         LoginResponseLombokModel response = given()
                 .spec(loginRequestSpec)
-                .body(body )
+                .body(body)
                 .when()
                 .post()
                 .then()

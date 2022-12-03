@@ -1,32 +1,27 @@
 package com.buchneva.tests;
 
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeAll;
+import com.buchneva.models.lombok.CreateModel;
+import com.buchneva.models.lombok.LoginBodyLombokModel;
+import com.buchneva.models.lombok.LoginResponseLombokModel;
 import org.junit.jupiter.api.Test;
 
+import static com.buchneva.specs.RequestSpecs.requestSpec;
+import static com.buchneva.specs.ResponseSpecs.responseSpec;
 import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.JSON;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 
 public class ReqresInTests {
-
-    @BeforeAll
-    static void setUp() {
-        RestAssured.baseURI = "https://reqres.in/api";
-    }
-
-
     @Test
     void checkSingleResourceNotFound() {
 
         given()
-                .log().uri()
+                .spec(requestSpec)
                 .when()
                 .get("/unknown/23")
                 .then()
-                .log().status()
-                .log().body()
+                .spec(responseSpec)
                 .statusCode(404);
     }
 
@@ -34,13 +29,11 @@ public class ReqresInTests {
     void checkSingleResource() {
 
         given()
-                .log().uri()
+                .spec(requestSpec)
                 .when()
                 .get("/unknown/2")
                 .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
+                .spec(responseSpec)
                 .body("data.id", is(2),
                         "data.name", is("fuchsia rose"),
                         "data.year", is(2001),
@@ -48,59 +41,42 @@ public class ReqresInTests {
                         "data.pantone_value", is("17-2031"))
                 .body("support.url", is("https://reqres.in/#support-heading"),
                         "support.text", is("To keep ReqRes free, contributions towards server costs are appreciated!"));
-    }
 
-    @Test
-    void checkCreateWithStatus() {
-
-        String data = "{\"name\": \"morpheus\", \"job\": \"leader\"}";
-
-        given()
-                .log().uri()
-                .contentType(JSON)
-                .body(data)
-                .when()
-                .get("/users")
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(200);
     }
 
     @Test
     void checkCreate() {
-
-        String data = "{\"name\": \"morpheus\", \"job\": \"leader\"}";
+        CreateModel data = new CreateModel();
+        data.setName("Irina");
+        data.setJob("qa");
 
         given()
-                .log().uri()
-                .contentType(JSON)
+                .spec(requestSpec)
                 .body(data)
                 .when()
                 .post("/users")
                 .then()
-                .log().status()
-                .log().body()
+                .spec(responseSpec)
                 .statusCode(201)
-                .body("name", is("morpheus"),
-                        "job", is("leader"));
+                .body("name", is(data.getName()),
+                        "job", is(data.getJob()));
     }
 
     @Test
     void loginUnsuccessful() {
+        LoginBodyLombokModel data = new LoginBodyLombokModel();
+        data.setEmail("peter@klaven");
 
-        String data = "{ \"email\": \"peter@klaven\" }";
-
-        given()
-                .log().uri()
-                .contentType(JSON)
+        LoginResponseLombokModel response = given()
+                .spec(requestSpec)
                 .body(data)
                 .when()
                 .post("/login")
                 .then()
-                .log().status()
-                .log().body()
+                .spec(responseSpec)
                 .statusCode(400)
-                .body("error", is("Missing password"));
+                .extract().as(LoginResponseLombokModel.class);
+
+        assertThat(response.getError()).isEqualTo("Missing password");
     }
 }

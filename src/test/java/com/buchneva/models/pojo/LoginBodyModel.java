@@ -1,6 +1,6 @@
 package com.buchneva.models.pojo;
 
-public class LoginBodyLombokModel {
+public class LoginBodyModel {
     //String data = "{ \"email\": \"eve.holt@reqres.in\", \"password\": \"cityslicka\" }";
     private String email, password;
 
